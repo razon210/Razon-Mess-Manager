@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mess Manager — Razon Islam Rahat</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef3f1;--sf:#fff;--ink:#14302b;--mut:#5d7872;--ln:#d3e0dc;--br:#0f5c4d;--bi:#fff;--ac:#e8a317;--dg:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1a18;--sf:#162623;--ink:#e6f1ee;--mut:#8fa9a3;--ln:#274039;--br:#2fa58e;--bi:#04201a;--ac:#f0b43a;--dg:#ff8a80;color-scheme:dark}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali","Segoe UI",system-ui,sans-serif;line-height:1.5}
+.w{max-width:720px;margin:0 auto}
+header{background:var(--br);color:var(--bi);padding:18px 16px 14px}
+header small{opacity:.85;font-size:13px}
+header h1{margin:0;font-size:26px;font-weight:700}
+header .sub{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px;font-size:14px}
+nav{display:flex;gap:6px;overflow-x:auto;padding:10px 16px;background:var(--sf);border-bottom:1px solid var(--ln);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+nav button{flex:0 0 auto;background:var(--bg);color:var(--ink);border:1px solid var(--ln)}
+nav button.on{background:var(--br);color:var(--bi);border-color:var(--br)}
+.bd{background:var(--dg);color:#fff;border-radius:9px;font-size:11px;padding:0 6px;margin-left:4px}
+main{padding:14px 16px 40px}
+.c{background:var(--sf);border:1px solid var(--ln);border-radius:14px;padding:14px;margin-bottom:12px}
+h2{font-size:17px;margin:0 0 10px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 3px}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:9px;min-height:42px}
+button{font:inherit;font-weight:600;border:0;border-radius:10px;min-height:40px;padding:0 14px;cursor:pointer}
+input:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--ac);outline-offset:1px}
+.p{background:var(--br);color:var(--bi);width:100%;margin-top:10px}
+.g{background:transparent;color:var(--br);border:1px solid var(--br)}
+.x{background:transparent;color:var(--dg);min-height:30px;padding:0 6px}
+.lk{background:none;color:var(--br);min-height:0;padding:0;text-decoration:underline;font-weight:500;margin-top:10px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.st div{background:var(--bg);border-radius:10px;padding:8px;text-align:center;font-size:12px;color:var(--mut)}
+.st b{display:block;font-size:20px;color:var(--br)}
+.sc{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
+th,td{padding:7px 5px;text-align:center;border-bottom:1px solid var(--ln)}
+th{color:var(--mut);font-weight:500;font-size:12px}
+td:first-child,th:first-child{text-align:left}
+.pos{color:var(--br);font-weight:700}.neg{color:var(--dg);font-weight:700}
+.it{padding:8px 0;border-bottom:1px solid var(--ln);display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.it small{color:var(--mut);display:block}
+.em{color:var(--mut);text-align:center;margin:12px 0}
+.msg{max-width:82%;padding:7px 10px;border-radius:12px;margin:6px 0;background:var(--bg);font-size:14px}
+.msg.me{margin-left:auto;background:var(--br);color:var(--bi)}
+.msg small{opacity:.7;display:block;font-size:11px}
+.note{font-size:13px;color:var(--mut);margin-top:8px}
+.auth{max-width:420px;margin:24px auto;padding:0 16px}
+@media print{nav,.np,button{display:none!important}body{background:#fff;color:#000}.c{border-color:#999}header{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div id="app"><p class="em" style="margin-top:40px">Loading…</p></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+firebase.initializeApp({
+  apiKey:"AIzaSyAiE_9EPHwCD6l7aeDiGw_CU5MBvu0Iipc",
+  authDomain:"razonislamrahat2026.firebaseapp.com",
+  projectId:"razonislamrahat2026",
+  storageBucket:"razonislamrahat2026.firebasestorage.app",
+  messagingSenderId:"696934387651",
+  appId:"1:696934387651:web:2e3b81f24c36bf50f77776"
+});
+var auth=firebase.auth(),db=firebase.firestore();
+var COLS=["meals","costs","other","deposits","feed","chat","notes"];
+var me=null,myName="",ready=false,messReady=false,M=null,S={},tab="home",authTab="in",err="",info="";
+var unMess=null,unSubs=[],subId=null;
+var today=new Date().toISOString().slice(0,10),month=today.slice(0,7);
+var $=function(i){return document.getElementById(i)};
+var esc=function(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})};
+var f2=function(n){return (Math.round(n*100)/100).toString()};
+function resetS(){COLS.forEach(function(c){S[c]=[]})}
+resetS();
+function mgr(){return M&&M.manager===me}
+function nm(e){var x=M&&M.members.find(function(y){return y.email===e});return x?x.name:e}
+function inMonth(a){return a.filter(function(e){return e.date&&e.date.slice(0,7)===month})}
+function coll(c){return db.collection("messes").doc(M.id).collection(c)}
+function run(p){return p.catch(function(e){alert(e.message||e)})}
+function note(t){return coll("notes").add({t:Date.now(),text:t})}
+function seenKey(){return "mm-seen-"+me}
+function unseen(){var s=+(localStorage.getItem(seenKey())||0);return S.notes.filter(function(n){return n.t>s}).length}
+
+function calc(){
+  var ml=inMonth(S.meals),cs=inMonth(S.costs),ot=inMonth(S.other),dp=inMonth(S.deposits);
+  var sm=function(a,k){return a.reduce(function(x,e){return x+e[k]},0)};
+  var tm=sm(ml,"n"),tc=sm(cs,"amt"),to=sm(ot,"amt"),td=sm(dp,"amt");
+  var rate=tm>0?tc/tm:0,share=M.members.length?to/M.members.length:0;
+  var rows=M.members.map(function(x){
+    var mm=sm(ml.filter(function(e){return e.email===x.email}),"n");
+    var d=sm(dp.filter(function(e){return e.email===x.email}),"amt");
+    var cost=mm*rate+share;
+    return {name:x.name,meals:mm,dep:d,cost:cost,bal:d-cost};
+  });
+  return {tm:tm,tc:tc,to:to,td:td,rate:rate,rows:rows};
+}
+
+function head(){
+  return '<header><div class="w"><small>Mess Manager</small><h1>Razon Islam Rahat</h1><div class="sub"><span>'+(M?esc(M.name)+' · ':'')+esc(myName||me||"")+(mgr()?' (Manager)':'')+'</span>'+(me?'<button class="g" style="color:var(--bi);border-color:var(--bi);min-height:32px" data-a="out">Logout</button>':'')+'</div></div></header>';
+}
+function authView(){
+  return head()+'<div class="auth"><div class="c"><div class="r2"><button class="'+(authTab==="in"?"p":"g")+'" data-a="at" data-v="in" style="margin:0">Login</button><button class="'+(authTab==="up"?"p":"g")+'" data-a="at" data-v="up" style="margin:0">Sign Up</button></div>'+
+  (authTab==="up"?'<label for="an">Your name</label><input id="an" autocomplete="name">':'')+
+  '<label for="ae">Email</label><input id="ae" type="email" autocomplete="email"><label for="ap">Password</label><input id="ap" type="password" autocomplete="'+(authTab==="in"?"current-password":"new-password")+'">'+
+  (err?'<p class="neg">'+esc(err)+'</p>':'')+(info?'<p class="pos">'+esc(info)+'</p>':'')+
+  '<button class="p" data-a="auth">'+(authTab==="in"?"Login":"Create account")+'</button>'+
+  (authTab==="in"?'<button class="lk" data-a="reset">Forgot password?</button>':'')+
+  '<p class="note">Use a valid email so you can reset a forgotten password.</p></div></div>';
+}
+function noMessView(){
+  return head()+'<main class="w"><div class="c"><h2>Create your mess</h2><label for="mn">Mess name</label><input id="mn"><button class="p" data-a="mk">Create mess</button><p class="note">Already in a mess? Ask your manager to add this email: <b>'+esc(me)+'</b>. It will appear here automatically.</p></div></main>';
+}
+var TABS=[["home","Summary"],["meal","Meals"],["cost","Costs"],["dep","Deposits"],["mem","Members"],["feed","To-Let"],["chat","Chat"],["nt","Alerts"]];
+function mainView(){
+  var n=unseen();
+  return head()+'<nav>'+TABS.map(function(t){return '<button class="'+(tab===t[0]?"on":"")+'" data-a="tab" data-v="'+t[0]+'">'+t[1]+(t[0]==="nt"&&n?'<span class="bd">'+n+'</span>':'')+'</button>'}).join("")+'</nav><main class="w">'+
+  '<div class="c np"><label for="mo" style="margin-top:0">Month (change to see previous months)</label><input type="month" id="mo" value="'+month+'"></div>'+view()+'</main>';
+}
+function list(t,a,fn,key,del){
+  a=a.slice().sort(function(x,y){return x.date<y.date?1:-1});
+  return '<div class="c"><h2>'+t+'</h2>'+(a.length?a.map(function(e){return '<div class="it"><span>'+fn(e)+'</span>'+(del?'<button class="x np" data-a="de" data-k="'+key+'" data-v="'+e.id+'">Delete</button>':'')+'</div>'}).join(""):'<p class="em">Nothing for this month.</p>')+'</div>';
+}
+function view(){
+  var c=calc(),G=mgr(),o="";
+  var mopt=M.members.map(function(x){return '<option value="'+esc(x.email)+'">'+esc(x.name)+'</option>'}).join("");
+  if(tab==="home"){
+    o+='<div class="c"><h2>'+month+' summary</h2><div class="st"><div><b>'+f2(c.tm)+'</b>Total meals</div><div><b>'+f2(c.tc)+'</b>Meal cost ৳</div><div><b>'+f2(c.rate)+'</b>Meal rate ৳</div></div>'+
+    '<div class="st" style="margin-top:8px"><div><b>'+f2(c.td)+'</b>Total deposit ৳</div><div><b>'+f2(c.to)+'</b>Other cost ৳</div><div><b>'+f2(c.td-c.tc-c.to)+'</b>Cash left ৳</div></div>'+
+    '<div class="sc" style="margin-top:12px"><table><thead><tr><th>Member</th><th>Meals</th><th>Deposit</th><th>Cost</th><th>Balance</th></tr></thead><tbody>'+
+    c.rows.map(function(r){return '<tr><td>'+esc(r.name)+'</td><td>'+f2(r.meals)+'</td><td>'+f2(r.dep)+'</td><td>'+f2(r.cost)+'</td><td class="'+(r.bal<0?"neg":"pos")+'">'+f2(r.bal)+'</td></tr>'}).join("")+'</tbody></table></div>'+
+    '<p class="note">Meal rate = total meal cost ÷ total meals. Other cost is shared equally. Positive balance = you get back, negative = you owe.</p><button class="p np" data-a="pdf">Save as PDF</button></div>';
+  }
+  if(tab==="meal"){
+    if(G)o+='<div class="c np"><h2>Add meal number</h2><div class="r2"><div><label for="d1">Date</label><input type="date" id="d1" value="'+today+'"></div><div><label for="p1">Member</label><select id="p1">'+mopt+'</select></div></div><label for="n1">Meals (e.g. 1, 1.5, 2)</label><input id="n1" type="number" step="0.5" min="0" inputmode="decimal"><button class="p" data-a="am">Add meal</button></div>';
+    o+=list("Meal log",inMonth(S.meals),function(e){return esc(nm(e.email))+' — '+f2(e.n)+' meal<small>'+e.date+'</small>'},"meals",G);
+  }
+  if(tab==="cost"){
+    if(G)o+='<div class="c np"><h2>Add daily cost (bazar)</h2><div class="r2"><div><label for="d2">Date</label><input type="date" id="d2" value="'+today+'"></div><div><label for="a2">Amount ৳</label><input id="a2" type="number" min="0" inputmode="decimal"></div></div><label for="t2">Note</label><input id="t2" placeholder="Rice, fish, vegetables"><button class="p" data-a="ac">Add daily cost</button></div>'+
+    '<div class="c np"><h2>Add other cost</h2><div class="r2"><div><label for="d3">Date</label><input type="date" id="d3" value="'+today+'"></div><div><label for="a3">Amount ৳</label><input id="a3" type="number" min="0" inputmode="decimal"></div></div><label for="t3">Note</label><input id="t3" placeholder="Gas, wifi, maid"><button class="p" data-a="ao">Add other cost</button></div>';
+    o+=list("Daily costs",inMonth(S.costs),function(e){return '৳'+f2(e.amt)+' — '+esc(e.note||"Bazar")+'<small>'+e.date+'</small>'},"costs",G);
+    o+=list("Other costs",inMonth(S.other),function(e){return '৳'+f2(e.amt)+' — '+esc(e.note||"Other")+'<small>'+e.date+'</small>'},"other",G);
+  }
+  if(tab==="dep"){
+    if(G)o+='<div class="c np"><h2>Deposit money to a member</h2><div class="r2"><div><label for="d4">Date</label><input type="date" id="d4" value="'+today+'"></div><div><label for="p4">Member</label><select id="p4">'+mopt+'</select></div></div><label for="a4">Amount ৳</label><input id="a4" type="number" min="0" inputmode="decimal"><button class="p" data-a="ad">Add deposit</button></div>';
+    o+=list("Deposits",inMonth(S.deposits),function(e){return esc(nm(e.email))+' — ৳'+f2(e.amt)+'<small>'+e.date+'</small>'},"deposits",G);
+  }
+  if(tab==="mem"){
+    if(G)o+='<div class="c np"><h2>Add new member</h2><label for="mnm">Name</label><input id="mnm"><label for="mem">Valid email</label><input id="mem" type="email"><button class="p" data-a="amem">Add member</button><p class="note">The member signs up with this same email and the mess appears for them.</p></div>';
+    o+='<div class="c"><h2>Members</h2>'+M.members.map(function(x){return '<div class="it"><span>'+esc(x.name)+(x.email===M.manager?' <b class="pos">· Manager</b>':'')+'<small>'+esc(x.email)+'</small></span>'+(G&&x.email!==M.manager?'<span><button class="g np" data-a="cm" data-v="'+esc(x.email)+'">Make manager</button> <button class="x np" data-a="rm" data-v="'+esc(x.email)+'">Remove</button></span>':'')+'</div>'}).join("")+'</div>';
+    if(G)o+='<div class="c np"><h2>Active month details</h2><label for="mrn">Mess name</label><input id="mrn" value="'+esc(M.name)+'"><button class="p" data-a="rn">Save mess name</button></div>';
+  }
+  if(tab==="feed"){
+    o+='<div class="c np"><h2>To-Let &amp; news feed</h2><textarea id="fp" rows="3" placeholder="Seat available, used items to sell or buy..."></textarea><button class="p" data-a="fp">Post</button></div>';
+    var fd=S.feed.slice().sort(function(a,b){return b.t-a.t});
+    o+='<div class="c"><h2>Posts</h2>'+(fd.length?fd.map(function(p){return '<div class="it"><span>'+esc(p.text)+'<small>'+esc(nm(p.by))+' · '+new Date(p.t).toLocaleDateString()+'</small></span>'+(p.by===me||G?'<button class="x np" data-a="df" data-v="'+p.id+'">Delete</button>':'')+'</div>'}).join(""):'<p class="em">No posts yet.</p>')+'</div>';
+  }
+  if(tab==="chat"){
+    var ch=S.chat.slice().sort(function(a,b){return a.t-b.t});
+    o+='<div class="c"><h2>Mess chat</h2><div id="cl" style="max-height:50vh;overflow-y:auto">'+(ch.length?ch.map(function(x){return '<div class="msg'+(x.by===me?" me":"")+'"><small>'+esc(nm(x.by))+' · '+new Date(x.t).toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})+'</small>'+esc(x.text)+'</div>'}).join(""):'<p class="em">No messages yet.</p>')+'</div><div class="r2" style="grid-template-columns:1fr auto;margin-top:8px"><input id="ct" placeholder="Write a message"><button class="p" style="margin:0;width:auto" data-a="sc">Send</button></div></div>';
+  }
+  if(tab==="nt"){
+    try{localStorage.setItem(seenKey(),Date.now())}catch(e){}
+    var nt=S.notes.slice().sort(function(a,b){return b.t-a.t}).slice(0,60);
+    o+='<div class="c"><h2>Notifications</h2>'+(nt.length?nt.map(function(n){return '<div class="it"><span>'+esc(n.text)+'<small>'+new Date(n.t).toLocaleString()+'</small></span></div>'}).join(""):'<p class="em">No notifications yet.</p>')+'</div>';
+  }
+  return o;
+}
+
+function draw(){
+  var a=$("app"),keep={},fid=null,ss=0,se=0;
+  var ae=document.activeElement;
+  if(ae&&ae.id&&/INPUT|TEXTAREA|SELECT/.test(ae.tagName)){fid=ae.id;try{ss=ae.selectionStart;se=ae.selectionEnd}catch(x){}}
+  Array.prototype.forEach.call(a.querySelectorAll("input,textarea,select"),function(el){if(el.id)keep[el.id]=el.value});
+  var scrollY=window.scrollY;
+  if(!ready||(me&&!messReady))a.innerHTML='<p class="em" style="margin-top:40px">Loading…</p>';
+  else if(!me)a.innerHTML=authView();
+  else if(!M)a.innerHTML=noMessView();
+  else a.innerHTML=mainView();
+  Object.keys(keep).forEach(function(id){var el=$(id);if(el&&id!=="mo")el.value=keep[id]});
+  if(fid&&$(fid)){$(fid).focus();try{$(fid).setSelectionRange(ss,se)}catch(x){}}
+  var cl=$("cl");if(cl)cl.scrollTop=cl.scrollHeight;
+  window.scrollTo(0,scrollY);
+}
+
+function stopSubs(){unSubs.forEach(function(u){u()});unSubs=[];subId=null;resetS()}
+function subscribe(id){
+  stopSubs();subId=id;
+  COLS.forEach(function(c){
+    unSubs.push(db.collection("messes").doc(id).collection(c).onSnapshot(function(s){
+      S[c]=s.docs.map(function(d){return Object.assign({id:d.id},d.data())});draw();
+    },function(e){console.error(c,e)}));
+  });
+}
+auth.onAuthStateChanged(function(u){
+  if(unMess){unMess();unMess=null}
+  stopSubs();M=null;messReady=false;
+  if(u){
+    me=u.email.toLowerCase();myName=u.displayName||me;
+    unMess=db.collection("messes").where("memberEmails","array-contains",me).limit(1).onSnapshot(function(s){
+      messReady=true;
+      if(s.empty){M=null;stopSubs()}
+      else{var d=s.docs[0];M=Object.assign({id:d.id},d.data());if(subId!==d.id)subscribe(d.id)}
+      draw();
+    },function(e){messReady=true;alert("Database error: "+e.message);draw()});
+  }else{me=null;myName=""}
+  ready=true;draw();
+});
+
+function v(i){return $(i)?$(i).value.trim():""}
+function need(c,msg){if(!c){alert(msg);return false}return true}
+document.addEventListener("click",function(ev){
+  var b=ev.target.closest("[data-a]");if(!b)return;
+  var a=b.dataset.a,val=b.dataset.v;
+  if(a==="at"){authTab=val;err="";info="";draw();return}
+  if(a==="auth"){
+    var e=v("ae").toLowerCase(),p=$("ap").value;err="";info="";
+    if(!e||!p){err="Enter email and password.";draw();return}
+    if(authTab==="up"){
+      var n=v("an");if(!n){err="Enter your name.";draw();return}
+      auth.createUserWithEmailAndPassword(e,p).then(function(c){
+        return c.user.updateProfile({displayName:n}).then(function(){myName=n;draw()});
+      }).catch(function(x){err=x.message;draw()});
+    }else{
+      auth.signInWithEmailAndPassword(e,p).catch(function(x){err="Wrong email or password.";draw()});
+    }
+    return;
+  }
+  if(a==="reset"){
+    var e2=v("ae").toLowerCase();if(!e2){err="Type your email first, then tap Forgot password.";draw();return}
+    auth.sendPasswordResetEmail(e2).then(function(){err="";info="Password reset email sent. Check your inbox.";draw()}).catch(function(x){err=x.message;draw()});return;
+  }
+  if(a==="out"){auth.signOut();return}
+  if(a==="tab"){tab=val;draw();return}
+  if(a==="pdf"){window.print();return}
+  if(a==="mk"){var mn=v("mn");if(!need(mn,"Enter a mess name."))return;
+    run(db.collection("messes").add({name:mn,manager:me,members:[{email:me,name:myName}],memberEmails:[me],created:Date.now()}));return}
+  if(!M)return;
+  var G=mgr(),p;
+  if(a==="am"&&G){var n1=parseFloat(v("n1"));if(!need(n1>=0&&v("d1"),"Enter date and meal number."))return;
+    p=coll("meals").add({date:v("d1"),email:v("p1"),n:n1}).then(function(){return note("Meal: "+nm(v("p1"))+" — "+n1+" on "+v("d1"))});$("n1").value=""}
+  else if(a==="ac"&&G){var a2=parseFloat(v("a2"));if(!need(a2>0&&v("d2"),"Enter date and amount."))return;
+    p=coll("costs").add({date:v("d2"),amt:a2,note:v("t2")}).then(function(){return note("Daily cost ৳"+a2+" added ("+(v("t2")||"Bazar")+")")});$("a2").value="";$("t2").value=""}
+  else if(a==="ao"&&G){var a3=parseFloat(v("a3"));if(!need(a3>0&&v("d3"),"Enter date and amount."))return;
+    p=coll("other").add({date:v("d3"),amt:a3,note:v("t3")}).then(function(){return note("Other cost ৳"+a3+" added ("+(v("t3")||"Other")+")")});$("a3").value="";$("t3").value=""}
+  else if(a==="ad"&&G){var a4=parseFloat(v("a4"));if(!need(a4>0&&v("d4"),"Enter date and amount."))return;
+    p=coll("deposits").add({date:v("d4"),email:v("p4"),amt:a4}).then(function(){return note("Deposit ৳"+a4+" received from "+nm(v("p4")))});$("a4").value=""}
+  else if(a==="amem"&&G){var e3=v("mem").toLowerCase(),n3=v("mnm");if(!need(e3&&n3,"Enter name and email."))return;
+    if(M.memberEmails.indexOf(e3)>-1){alert("Already a member.");return}
+    p=db.collection("messes").doc(M.id).update({members:firebase.firestore.FieldValue.arrayUnion({email:e3,name:n3}),memberEmails:firebase.firestore.FieldValue.arrayUnion(e3)}).then(function(){return note(n3+" joined the mess")});$("mem").value="";$("mnm").value=""}
+  else if(a==="rm"&&G){if(!confirm("Remove this member?"))return;
+    var nn=nm(val);p=db.collection("messes").doc(M.id).update({members:M.members.filter(function(x){return x.email!==val}),memberEmails:M.memberEmails.filter(function(x){return x!==val})}).then(function(){return note(nn+" was removed")})}
+  else if(a==="cm"&&G){if(!confirm("Make "+nm(val)+" the new manager? You will lose manager access."))return;
+    var n4=nm(val);p=note(n4+" is now the manager").then(function(){return db.collection("messes").doc(M.id).update({manager:val})})}
+  else if(a==="rn"&&G){if(!need(v("mrn"),"Enter a name."))return;p=db.collection("messes").doc(M.id).update({name:v("mrn")}).then(function(){return note("Mess name updated")})}
+  else if(a==="de"&&G){p=coll(b.dataset.k).doc(val).delete().then(function(){return note("An entry was deleted from "+b.dataset.k)})}
+  else if(a==="fp"){var t=v("fp");if(!t)return;p=coll("feed").add({by:me,text:t,t:Date.now()}).then(function(){return note(nm(me)+" posted on To-Let")});$("fp").value=""}
+  else if(a==="df"){p=coll("feed").doc(val).delete()}
+  else if(a==="sc"){var ct=v("ct");if(!ct)return;p=coll("chat").add({by:me,text:ct,t:Date.now()});$("ct").value=""}
+  if(p)run(p);
+});
+document.addEventListener("change",function(e){if(e.target.id==="mo"&&e.target.value){month=e.target.value;draw()}});
+document.addEventListener("keydown",function(e){if(e.key==="Enter"&&e.target.id==="ct"){var b=document.querySelector('[data-a="sc"]');if(b)b.click()}});
+})();
+</script>
+</body>
+</html>
