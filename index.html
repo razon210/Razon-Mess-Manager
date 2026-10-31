@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Mess Manager — Razon Islam Rahat</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f5c4d">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#eef3f1;--sf:#fff;--ink:#14302b;--mut:#5d7872;--ln:#d3e0dc;--br:#0f5c4d;--bi:#fff;--ac:#e8a317;--dg:#b3261e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -68,6 +71,7 @@ firebase.initializeApp({
   messagingSenderId:"696934387651",
   appId:"1:696934387651:web:2e3b81f24c36bf50f77776"
 });
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 var auth=firebase.auth(),db=firebase.firestore();
 var COLS=["meals","costs","other","deposits","feed","chat","notes"];
 var me=null,myName="",ready=false,messReady=false,M=null,S={},tab="home",authTab="in",err="",info="";
